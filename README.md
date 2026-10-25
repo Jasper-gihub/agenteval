@@ -1,6 +1,10 @@
-# AgentEval（草稿）
+# AgentEval
 
 **大多数 agent 评测结论是噪声。这个库的工作是把它算清楚。**
+
+> https://github.com/Jasper-gihub/agenteval
+
+零第三方依赖（除 pyyaml），63 个测试。
 
 ## 它想解决的具体问题
 
@@ -130,5 +134,5 @@ DataAgent 是它的第一个被试对象，也是它的第一个真实用户。
 - [x] `report.py`：Markdown 报告（概览 / 分难度 / 方差分解 / 配对 / 帕累托 / 可检出下限）（9 测试）
 - [x] `gate.py`：回归门禁，CI 可用（11 测试）
 - [x] `examples/`：quickstart（60 题跑通）、replay_dataagent（4 配置回放）、pipeline（端到端）
-- [ ] 推到 GitHub
+- [x] 推到 GitHub
 - [ ] 用 DataAgent 的真实 history 回放一遍 runner（现在只回放了统计层）
