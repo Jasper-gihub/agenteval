@@ -2,7 +2,7 @@
 
 **大多数 agent 评测结论是噪声。这个库的工作是把它算清楚。**
 
-> https://github.com/Jasper-gihub/agenteval
+> https://github.com/KelpKernel/agenteval
 
 零第三方依赖（除 pyyaml），63 个测试。
 
