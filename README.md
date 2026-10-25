@@ -32,13 +32,24 @@
 
 ## 模块
 
-| 模块 | 作用 |
-|---|---|
-| `stats.py` | 配对检验（精确 McNemar）、Wilson 区间、**样本量规划**、配对 bootstrap、方差分解、帕累托前沿 |
-| `dataset.py` | YAML 任务集：题目、难度分层、金标准（execution-based） |
-| `runner.py` | 执行器：并发、限流、断点续跑、trace 落盘、成本记账 |
-| `report.py` | Markdown/HTML 报告：2×2 表、难度分层、成本-质量散点 |
-| `gate.py` | CI 门禁：回归超过阈值就 exit 1 |
+| 模块 | 作用 | 状态 |
+|---|---|---|
+| `stats.py` | 配对检验、Wilson 区间、**样本量规划**、配对 bootstrap、方差分解、帕累托、多重比较 | ✅ 22 测试 |
+| `dataset.py` | YAML 任务集：难度分层、金标准必填校验、兼容 DataAgent 的 `question`/`ref_sql` 写法 | ✅ 11 测试 |
+| `runner.py` | 并发执行、断点续跑（jsonl 边跑边写）、多次采样、成本记账、异常不炸整轮 | ✅ 10 测试 |
+| `report.py` | Markdown 报告：2×2 表、难度分层、成本-质量散点 | 待做 |
+| `gate.py` | CI 门禁：回归超阈值 exit 1 | 待做 |
+
+### runner 的一个设计细节
+
+`runner` 会给每次采样传 `replace(task, sample=i)` 的副本。没有这个字段，
+agent 无法让第 3 次采样和第 1 次不同，**方差分解会永远得出「采样噪声 = 0」**——
+这个 bug 在第一次跑 quickstart 时就暴露了，现在被 `examples/quickstart.py` 盯着：
+
+```
+60 题 × 3 次采样，总方差 0.1219 = 任务难度 0.0787 + 采样噪声 0.0432（任务占 65%）
+判读：任务难度占大头 → 加题才能提高分辨率；采样噪声占大头 → 这个配置的指标本身会漂。
+```
 
 ## 与 DataAgent 的关系
 
@@ -77,8 +88,9 @@ DataAgent 是它的第一个被试对象，也是它的第一个真实用户。
 ## 当前进度
 
 - [x] `stats.py`：配对检验、区间估计、样本量规划、方差分解、帕累托、多重比较（22 个测试）
+- [x] `dataset.py`：YAML 加载、难度分层、金标准必填校验（11 个测试）
+- [x] `runner.py`：并发、断点续跑、多次采样、成本记账（10 个测试）
+- [x] `examples/quickstart.py`：直接读 DataAgent 的 60 题跑通，方差分解可见
 - [x] `examples/replay_dataagent.py`：用 4 个真实配置回放，验证公式与结论
-- [ ] `dataset.py`
-- [ ] `runner.py`
 - [ ] `report.py`
 - [ ] `gate.py`

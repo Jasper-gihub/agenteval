@@ -5,6 +5,16 @@
 也不会因为某个科学计算包版本问题让 CI 挂掉。
 """
 
+from agenteval.dataset import Dataset, Task
+from agenteval.runner import (
+    AgentOutput,
+    Record,
+    Summary,
+    correctness_by_task,
+    run_dataset,
+    run_sync,
+    summarize,
+)
 from agenteval.stats import (
     mcnemar_exact,
     paired_bootstrap,
@@ -17,10 +27,19 @@ from agenteval.stats import (
 __version__ = "0.1.0"
 
 __all__ = [
+    "AgentOutput",
+    "Dataset",
+    "Record",
+    "Summary",
+    "Task",
+    "correctness_by_task",
     "mcnemar_exact",
     "paired_bootstrap",
     "pareto_frontier",
     "required_sample_size",
+    "run_dataset",
+    "run_sync",
+    "summarize",
     "variance_components",
     "wilson_interval",
 ]
