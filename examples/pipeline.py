@@ -12,26 +12,50 @@ v2 比 v1 高 8 个点——足够让大部分人写下"提升 8 个点"，
 
 from __future__ import annotations
 
+import argparse
 import random
 from pathlib import Path
 
 from agenteval import Dataset, AgentOutput, run_sync
 
-QUESTIONS = Path(r"D:\Projects\agentlab\dataagent\evals\questions.yaml")
-OUTPUT_DIR = Path(__file__).resolve().parents[1] / "reports"
+HERE = Path(__file__).resolve().parent
+# 仓库自带 12 题（CI 与演示用，不依赖外部数据集）
+TINY_DATASET = HERE / "tiny_tasks.yaml"
+# 本机可指向 DataAgent 的真实 60 题
+REAL_DATASET = Path(r"D:\Projects\agentlab\dataagent\evals\questions.yaml")
+DEFAULT_OUT_DIR = Path(__file__).resolve().parents[1] / "reports"
 
-# 两个"配置"：按难度给不同命中率，v2 在 hard 上提升最明显
+# 两个"配置"：v2 在每一档都明确更好。
+# 差距刻意拉大（约 +30 个点）——12 题的样本量下，小差距会被随机性淹没，
+# 那样 CI 会随机变红。真实场景的改进幅度看 replay_dataagent.py 的 60 题结果。
 VERSIONS = {
-    "v1": {"easy": 0.85, "medium": 0.45, "hard": 0.25, "ambiguous": 0.15},
-    "v2": {"easy": 0.88, "medium": 0.50, "hard": 0.40, "ambiguous": 0.18},
+    "v1": {"easy": 0.55, "medium": 0.35, "hard": 0.15, "ambiguous": 0.10},
+    "v2": {"easy": 0.95, "medium": 0.75, "hard": 0.55, "ambiguous": 0.35},
 }
 
 
-def main() -> int:
-    dataset = Dataset.from_yaml(QUESTIONS)
-    print(f"任务集：{dataset.describe()}")
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        description="端到端演示：跑两组配置 → 生成 records.jsonl → 供 report / gate 使用"
+    )
+    parser.add_argument(
+        "--dataset",
+        help=f"任务集路径；默认 {TINY_DATASET.name}（12 题），本机可指向 "
+        f"DataAgent 的 60 题（{REAL_DATASET}）",
+    )
+    parser.add_argument("--out-dir", help="records 输出目录，默认 reports/")
+    args = parser.parse_args(argv)
 
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    dataset_path = Path(args.dataset) if args.dataset else TINY_DATASET
+    if not dataset_path.exists():
+        print(f"找不到任务集：{dataset_path}")
+        return 1
+    out_dir = Path(args.out_dir) if args.out_dir else DEFAULT_OUT_DIR
+
+    dataset = Dataset.from_yaml(dataset_path)
+    print(f"任务集：{dataset.describe()}（{dataset_path.name}）")
+
+    out_dir.mkdir(parents=True, exist_ok=True)
     for name, rates in VERSIONS.items():
         def agent(task, *, table=rates, tag=name) -> AgentOutput:
             rng = random.Random(f"{tag}#{task.id}#{task.sample}")
@@ -47,14 +71,16 @@ def main() -> int:
             judge=lambda task, output: output.answer == "RIGHT",
             repeat=2,
             concurrency=8,
-            output=OUTPUT_DIR / f"{name}.jsonl",
+            output=out_dir / f"{name}.jsonl",
         )
         hits = sum(record.correct for record in records)
-        print(f"  {name}: {hits}/{len(records)} → {OUTPUT_DIR / f'{name}.jsonl'}")
+        print(f"  {name}: {hits}/{len(records)} → {out_dir / f'{name}.jsonl'}")
 
     print("\n下一步：")
-    print("  python -m agenteval report --records reports/v2.jsonl --baseline reports/v1.jsonl")
-    print("  python -m agenteval gate --baseline reports/v1.jsonl --candidate reports/v2.jsonl")
+    print(f"  python -m agenteval report --records {out_dir / 'v2.jsonl'} "
+          f"--baseline {out_dir / 'v1.jsonl'}")
+    print(f"  python -m agenteval gate --baseline {out_dir / 'v1.jsonl'} "
+          f"--candidate {out_dir / 'v2.jsonl'}")
     return 0
 
 

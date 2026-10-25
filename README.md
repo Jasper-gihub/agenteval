@@ -1,5 +1,7 @@
 # AgentEval
 
+[![CI](https://github.com/KelpKernel/agenteval/actions/workflows/ci.yml/badge.svg)](https://github.com/KelpKernel/agenteval/actions/workflows/ci.yml)
+
 **大多数 agent 评测结论是噪声。这个库的工作是把它算清楚。**
 
 > https://github.com/KelpKernel/agenteval

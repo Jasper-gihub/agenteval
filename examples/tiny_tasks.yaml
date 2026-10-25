@@ -1,0 +1,63 @@
+# 12 题小任务集：给 CI 和演示用，不依赖外部数据集。
+# gold 是字符串答案——runner 用假 agent 时只需要判断对错，不需要真的执行 SQL。
+# 真实评测集见 DataAgent 仓库的 evals/questions.yaml（60 题，带 ref_sql）。
+
+- id: t01
+  difficulty: easy
+  question: 一共有多少个订单？
+  gold: "99441"
+
+- id: t02
+  difficulty: easy
+  question: 一共有多少个不同的真实客户（同一客户多次下单只算一次）？
+  gold: "96096"
+
+- id: t03
+  difficulty: easy
+  question: 已送达（delivered）的订单有多少个？
+  gold: "96478"
+
+- id: t04
+  difficulty: medium
+  question: 各订单状态分别有多少订单？按数量降序。
+  gold: delivered 96478 / shipped 1107 / canceled 625
+
+- id: t05
+  difficulty: medium
+  question: 哪种支付方式的订单数最多？有多少笔？
+  gold: credit_card 76795
+
+- id: t06
+  difficulty: medium
+  question: 平均每条订单的评价分数是多少？保留两位小数。
+  gold: "4.09"
+
+- id: t07
+  difficulty: hard
+  question: 被取消的订单占全部订单的比例是多少？给百分比，保留两位小数。
+  gold: "0.63%"
+
+- id: t08
+  difficulty: hard
+  question: 配送延迟（实际送达晚于承诺日期）的订单，差评率是多少？
+  gold: "54.02%"
+
+- id: t09
+  difficulty: hard
+  question: 复购客户（下过 2 单及以上）占全部客户的比例是多少？
+  gold: "3.12%"
+
+- id: t10
+  difficulty: ambiguous
+  question: 销量最好的商品类目是什么？请说明你用什么口径衡量销量。
+  gold: bed_bath_table（按订单商品件数）
+
+- id: t11
+  difficulty: ambiguous
+  question: 平台最赚钱的商品类目是哪个？请说明你用什么指标衡量赚钱。
+  gold: health_beauty（按 GMV）
+
+- id: t12
+  difficulty: ambiguous
+  question: 客户满意度最高的州是哪个？请说明口径。
+  gold: PR（平均评分，至少 500 条评价）
