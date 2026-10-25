@@ -40,6 +40,43 @@
 | `report.py` | Markdown 报告：2×2 表、难度分层、成本-质量散点 | 待做 |
 | `gate.py` | CI 门禁：回归超阈值 exit 1 | 待做 |
 
+### 命令行
+
+```bash
+# 生成报告（可选对比基线）
+python -m agenteval report --records reports/v2.jsonl --baseline reports/v1.jsonl \
+    --label v2 --baseline-label v1 --out reports/report.md
+
+# 回归门禁：准确率跌幅超阈值 / 成本涨幅超阈值 → 退出码 1
+python -m agenteval gate --baseline reports/v1.jsonl --candidate reports/v2.jsonl \
+    --max-drop 0.03 --max-cost-increase 0.5 --require-significance
+```
+
+报告长这样（节选，真实输出）：
+
+```
+## 配对对比（精确 McNemar）
+
+|                | v1 对、v2 错 | v1 错、v2 对 |
+| 题数           | 7            | 18           |
+
+- 准确率变化 +0.183
+- McNemar p = 0.0433
+- 结论：显著，v2 更好。
+
+## 这个规模能检出什么
+
+- 实测不一致率 41.7%
+- 60 题的可检出下限是 22.9%（80% 功效，α=0.05）
+- 观察到的差异 18.3% 低于可检出下限 22.9%：这次显著，但功效不足——
+  换一批采样可能翻转，别当成稳固结论
+```
+
+最后那句是刻意加的。**「事后显著」和「事先有把握」是两件事**：
+p=0.043 说明这次观察少见，但 60 题的功效只够检出 22.9 个点，
+同样的改动换一批采样很可能就不显著了。报告如果只写「显著」，
+就是把一个不稳的结论包装成稳的。
+
 ### runner 的一个设计细节
 
 `runner` 会给每次采样传 `replace(task, sample=i)` 的副本。没有这个字段，
@@ -87,10 +124,11 @@ DataAgent 是它的第一个被试对象，也是它的第一个真实用户。
 
 ## 当前进度
 
-- [x] `stats.py`：配对检验、区间估计、样本量规划、方差分解、帕累托、多重比较（22 个测试）
-- [x] `dataset.py`：YAML 加载、难度分层、金标准必填校验（11 个测试）
-- [x] `runner.py`：并发、断点续跑、多次采样、成本记账（10 个测试）
-- [x] `examples/quickstart.py`：直接读 DataAgent 的 60 题跑通，方差分解可见
-- [x] `examples/replay_dataagent.py`：用 4 个真实配置回放，验证公式与结论
-- [ ] `report.py`
-- [ ] `gate.py`
+- [x] `stats.py`：配对检验、区间估计、样本量规划、方差分解、帕累托、多重比较（22 测试）
+- [x] `dataset.py`：YAML 加载、难度分层、金标准必填校验（11 测试）
+- [x] `runner.py`：并发、断点续跑、多次采样、成本记账（10 测试）
+- [x] `report.py`：Markdown 报告（概览 / 分难度 / 方差分解 / 配对 / 帕累托 / 可检出下限）（9 测试）
+- [x] `gate.py`：回归门禁，CI 可用（11 测试）
+- [x] `examples/`：quickstart（60 题跑通）、replay_dataagent（4 配置回放）、pipeline（端到端）
+- [ ] 推到 GitHub
+- [ ] 用 DataAgent 的真实 history 回放一遍 runner（现在只回放了统计层）
