@@ -39,7 +39,7 @@ def test_mcnemar_balanced_is_not_significant():
 
 
 def test_mcnemar_datagent_case():
-    """DataAgent 实验 3 的真实数字：flash 独对 7、deepseek 独对 11 → p≈0.48。"""
+    """Litmus 实验 3 的真实数字：flash 独对 7、deepseek 独对 11 → p≈0.48。"""
     assert mcnemar_exact(7, 11) == pytest.approx(0.4807, abs=5e-4)
 
 

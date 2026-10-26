@@ -1,12 +1,12 @@
 """最小可运行示例：不花钱、不联网，60 题跑 3 次采样。
 
 它演示三件普通 eval 脚本做不到的事：
-1. 直接读 DataAgent 的任务集（`question` / `ref_sql` 写法），不用改文件
+1. 直接读 Litmus 的任务集（`question` / `ref_sql` 写法），不用改文件
 2. 同一题多次采样 → 才能把方差拆成"题目难度"和"采样噪声"
 3. 准确率一律给区间，不给点值
 
 这里的 agent 是假的：按难度用一个确定性伪随机决定答对还是答错，
-正确率取的是 DataAgent 实测的四个数值，所以输出可以和真实结果对照着看。
+正确率取的是 Litmus 实测的四个数值，所以输出可以和真实结果对照着看。
 
 用法：
   python examples/quickstart.py
@@ -31,7 +31,7 @@ QUESTIONS = Path(
     r"D:\Projects\agentlab\dataagent\evals\questions.yaml"
 )
 
-# DataAgent 实测的逐难度准确率（flash v0.2.0），用来模拟一个"中等能力"agent
+# Litmus 实测的逐难度准确率（flash v0.2.0），用来模拟一个"中等能力"agent
 ACCURACY = {"easy": 0.93, "medium": 0.47, "hard": 0.33, "ambiguous": 0.20}
 
 

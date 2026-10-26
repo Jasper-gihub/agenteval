@@ -1,6 +1,6 @@
 # 12 题小任务集：给 CI 和演示用，不依赖外部数据集。
 # gold 是字符串答案——runner 用假 agent 时只需要判断对错，不需要真的执行 SQL。
-# 真实评测集见 DataAgent 仓库的 evals/questions.yaml（60 题，带 ref_sql）。
+# 真实评测集见 Litmus 仓库的 evals/questions.yaml（60 题，带 ref_sql）。
 
 - id: t01
   difficulty: easy

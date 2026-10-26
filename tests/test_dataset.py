@@ -19,7 +19,7 @@ def write_yaml(tmp_path, items):
 
 
 def test_loads_dataagent_format(tmp_path):
-    """DataAgent 的 question / ref_sql 写法必须能直接读进来。"""
+    """Litmus 的 question / ref_sql 写法必须能直接读进来。"""
     path = write_yaml(
         tmp_path,
         [

@@ -21,7 +21,7 @@ from agenteval import Dataset, AgentOutput, run_sync
 HERE = Path(__file__).resolve().parent
 # 仓库自带 12 题（CI 与演示用，不依赖外部数据集）
 TINY_DATASET = HERE / "tiny_tasks.yaml"
-# 本机可指向 DataAgent 的真实 60 题
+# 本机可指向 Litmus 的真实 60 题
 REAL_DATASET = Path(r"D:\Projects\agentlab\dataagent\evals\questions.yaml")
 DEFAULT_OUT_DIR = Path(__file__).resolve().parents[1] / "reports"
 
@@ -41,7 +41,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--dataset",
         help=f"任务集路径；默认 {TINY_DATASET.name}（12 题），本机可指向 "
-        f"DataAgent 的 60 题（{REAL_DATASET}）",
+        f"Litmus 的 60 题（{REAL_DATASET}）",
     )
     parser.add_argument("--out-dir", help="records 输出目录，默认 reports/")
     args = parser.parse_args(argv)

@@ -4,8 +4,8 @@
 1. **每题必须有可判定的金标准**（gold_sql 或 gold），否则评测没法自动化。
    没写金标准的题会在加载时直接报错，而不是跑完才发现没法判对错。
 2. **难度分层是一等公民**。总分掩盖方向相反的效应——
-   DataAgent 的 v0.3.0 就是 easy −26 点被 medium +13 点抵消，看总分以为"没变化"。
-3. **兼容已有格式**：DataAgent 的 60 题（`question` / `ref_sql`）能直接读进来，
+   Litmus 的 v0.3.0 就是 easy −26 点被 medium +13 点抵消，看总分以为"没变化"。
+3. **兼容已有格式**：Litmus 的 60 题（`question` / `ref_sql`）能直接读进来，
    不用改文件就能被新工具评测。
 """
 
@@ -96,7 +96,7 @@ class Dataset:
             tasks.append(
                 Task(
                     id=item.get("id", ""),
-                    # question / ref_sql 是 DataAgent 用过的写法，保留兼容
+                    # question / ref_sql 是 Litmus 用过的写法，保留兼容
                     prompt=item.get("prompt") or item.get("question") or "",
                     difficulty=item.get("difficulty", "medium"),
                     gold_sql=item.get("gold_sql") or item.get("ref_sql"),

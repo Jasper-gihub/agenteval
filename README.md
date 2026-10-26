@@ -10,7 +10,7 @@
 
 ## 它想解决的具体问题
 
-来自上一个项目 DataAgent 的真实经历：
+来自上一个项目 Litmus 的真实经历：
 
 我给自己的 agent 做了两次 A/B 实验：
 
@@ -41,7 +41,7 @@
 | 模块 | 作用 | 状态 |
 |---|---|---|
 | `stats.py` | 配对检验、Wilson 区间、**样本量规划**、配对 bootstrap、方差分解、帕累托、多重比较 | ✅ 22 测试 |
-| `dataset.py` | YAML 任务集：难度分层、金标准必填校验、兼容 DataAgent 的 `question`/`ref_sql` 写法 | ✅ 11 测试 |
+| `dataset.py` | YAML 任务集：难度分层、金标准必填校验、兼容 Litmus 的 `question`/`ref_sql` 写法 | ✅ 11 测试 |
 | `runner.py` | 并发执行、断点续跑（jsonl 边跑边写）、多次采样、成本记账、异常不炸整轮 | ✅ 10 测试 |
 | `report.py` | Markdown 报告：2×2 表、难度分层、成本-质量散点 | 待做 |
 | `gate.py` | CI 门禁：回归超阈值 exit 1 | 待做 |
@@ -94,13 +94,13 @@ agent 无法让第 3 次采样和第 1 次不同，**方差分解会永远得出
 判读：任务难度占大头 → 加题才能提高分辨率；采样噪声占大头 → 这个配置的指标本身会漂。
 ```
 
-## 与 DataAgent 的关系
+## 与 Litmus 的关系
 
-DataAgent 是它的第一个被试对象，也是它的第一个真实用户。
+Litmus 是它的第一个被试对象，也是它的第一个真实用户。
 `evals/compare.py`、`analyze_trace.py`、`recompute.py` 里的能力会被抽到这里，
 但不再绑定 SQL agent——任何"输入任务、输出答案"的 agent 都该能用。
 
-## 回放验证：拿 DataAgent 的 4 个真实配置试刀
+## 回放验证：拿 Litmus 的 4 个真实配置试刀
 
 `python examples/replay_dataagent.py` 的输出（摘要）：
 
@@ -137,4 +137,4 @@ DataAgent 是它的第一个被试对象，也是它的第一个真实用户。
 - [x] `gate.py`：回归门禁，CI 可用（11 测试）
 - [x] `examples/`：quickstart（60 题跑通）、replay_dataagent（4 配置回放）、pipeline（端到端）
 - [x] 推到 GitHub
-- [ ] 用 DataAgent 的真实 history 回放一遍 runner（现在只回放了统计层）
+- [ ] 用 Litmus 的真实 history 回放一遍 runner（现在只回放了统计层）

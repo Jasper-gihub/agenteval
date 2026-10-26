@@ -1,4 +1,4 @@
-"""用 DataAgent 的真实评测结果回放 AgentEval 的统计能力。
+"""用 Litmus 的真实评测结果回放 AgentEval 的统计能力。
 
 这个脚本回答三个问题：
 1. 那四次实验里，哪一次能得出统计上站得住的结论？（答案：都没有）
@@ -60,7 +60,7 @@ def main() -> int:
         print(f"没找到结果文件：{base}")
         return 1
 
-    print("# DataAgent 评测结果的统计回放\n")
+    print("# Litmus 评测结果的统计回放\n")
     print(f"样本：{len(next(iter(runs.values()))['records'])} 题 × {len(runs)} 个配置\n")
 
     # ---------- 1. 每个配置的准确率区间 ----------
